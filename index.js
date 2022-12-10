@@ -23,12 +23,29 @@ const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology:
 async function run() {
     try {
         const usersCollection = client.db("rmcEducation").collection("users");
+        const blogCollection = client.db("rmcEducation").collection("blogs");
 
+        // users api
         app.post('/users',async(req,res)=>{
             const user = req.body;
             // console.log(user);
             const result = await usersCollection.insertOne(user);
             res.send(result)
+        })
+
+        // blogs api
+        app.post('/blogs',async(req,res)=>{
+            const content = req.body;
+            console.log(content);
+            const result = await blogCollection.insertOne(content);
+            res.send(result);
+        })
+
+        app.get('/blogs', async (req, res) => {
+            const query = {}
+            const result = await blogCollection.find(query).toArray()
+            res.send(result);
+
         })
 
     } finally {
